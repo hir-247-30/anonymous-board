@@ -1,0 +1,30 @@
+version: "3"
+services:
+  # Web
+  app:
+    ports:
+      - "80:80"
+    build: ./app
+    container_name: anonymous-board
+    volumes:
+      - ./src:/var/www/html
+
+  # DB
+  db:
+    image: mysql:5.7
+    container_name: anonymous-board-db
+
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: anonymous-board
+      MYSQL_USER: hagiwara
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+    # 既に別のアプリで使われていたら必要に応じてポートを変える
+    ports:
+      - 3306:3306
